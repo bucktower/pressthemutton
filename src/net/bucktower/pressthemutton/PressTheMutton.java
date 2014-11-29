@@ -17,6 +17,8 @@ public class PressTheMutton extends PApplet {
 	
 	//sheep
 	ImageEditor sheep;
+	public static int sheepHeight;
+	public static int sheepWidth;
 
 	public void setup() {
 		SketchObject.setApp(this);	
@@ -24,6 +26,9 @@ public class PressTheMutton extends PApplet {
 		grass = new ImageEditor("net/bucktower/pressthemutton/data/grasshd.png");
 		cata = new ImageEditor("net/bucktower/pressthemutton/data/catahd.png");
 		sheep = new ImageEditor("net/bucktower/pressthemutton/data/muttonhd.png");
+		
+		sheepHeight = sheep.height();
+		sheepWidth = sheep.width();
 
 		noStroke();
 		
@@ -50,6 +55,10 @@ public class PressTheMutton extends PApplet {
 		if(mouseX < cataMargin+cata.width() && mouseY > height-cata.height()){
 			drawGame(true);
 		}
+	}
+	
+	public void mouseReleased(){
+		//the mutton man goes flying
 	}
 	
 	private void drawGame(boolean drawSheep){
