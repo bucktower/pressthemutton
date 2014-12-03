@@ -1,13 +1,25 @@
 package net.bucktower.pressthemutton;
 
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 
 
 public class PressTheMutton extends PApplet {
 
+	ArrayList<Mutton> theMuttons;
+	int timeOfLastUpdate;
+	ArrayList<Mutton> muttonsToAdd;
+	ArrayList<Mutton> muttonsToRemove;
+	
+	static int myWidth = 1280;
+	static int myHeight = 600;
+	
 	//catapult
 	ImageEditor cata;
-	int cataMargin = 150;
+	static int cataMargin = 150;
+	static int cataHeight;
+	static int cataWidth;
 		
 	//grass
 	ImageEditor grass;
@@ -22,6 +34,11 @@ public class PressTheMutton extends PApplet {
 
 	public void setup() {
 		SketchObject.setApp(this);	
+		
+		theMuttons = new ArrayList<Mutton>();
+		muttonsToAdd = new ArrayList<Mutton>();
+		muttonsToRemove = new ArrayList<Mutton>();
+		timeOfLastUpdate = millis();
 
 		grass = new ImageEditor("net/bucktower/pressthemutton/data/grasshd.png");
 		cata = new ImageEditor("net/bucktower/pressthemutton/data/catahd.png");
@@ -32,7 +49,7 @@ public class PressTheMutton extends PApplet {
 
 		noStroke();
 		
-		size(1280,600);
+		size(myWidth,myHeight);
 		
 		//grass
 		grass1X = (int)random(cataMargin+cata.width(),width-grass.width());
@@ -40,9 +57,15 @@ public class PressTheMutton extends PApplet {
 		grass3X = (int)random(cataMargin+cata.width(),width-grass.width());
 		
 		drawGame(false);
+		
+		cataHeight = cata.height();
+		cataWidth = cata.width();
 	}
 
 	public void draw() {
+	    updateAllMuttons();
+	    addOrRemoveMuttons();
+	    drawAllMuttons();
 	}
 	
 	public void mousePressed(){
@@ -59,6 +82,8 @@ public class PressTheMutton extends PApplet {
 	
 	public void mouseReleased(){
 		//the mutton man goes flying
+		Mutton tempMutton = new Mutton(mouseX, mouseY);
+	    muttonsToAdd.add(tempMutton);
 	}
 	
 	private void drawGame(boolean drawSheep){
@@ -68,7 +93,7 @@ public class PressTheMutton extends PApplet {
 		
 		if(drawSheep){
 			drawString();
-			drawSheep();
+			drawSheep(mouseX, mouseY);
 		}
 	}
 	
@@ -82,8 +107,8 @@ public class PressTheMutton extends PApplet {
 		grass.drawAt(grass3X,height-grass.height());
 	}
 	
-	private void drawSheep(){
-		sheep.drawAt(mouseX-sheep.width()/2, mouseY-sheep.height()/2);
+	public void drawSheep(int refX, int refY){
+		sheep.drawAt(refX-sheep.width()/2, refY-sheep.height()/2);
 	}
 	
 	private void drawString(){
@@ -95,5 +120,44 @@ public class PressTheMutton extends PApplet {
 	
 	public static void main(String _args[]) {
 		PApplet.main(new String[] { net.bucktower.pressthemutton.PressTheMutton.class.getName() });
+	}
+	
+	// ****************************************UPDATE ALL ARROWS
+	void updateAllMuttons()
+	{
+	  double deltaT = (millis()-timeOfLastUpdate)/1000.0;
+	  timeOfLastUpdate = millis();
+	  for (Mutton a:theMuttons)
+	  {
+	    a.update(deltaT);
+	    if(a.isAlive == false){
+	    	println("killing the mutton");
+	    	muttonsToRemove.add(a);
+	    }
+	  }
+	}
+	// *************************************** ADD OR REMOVE ARROWS
+	void addOrRemoveMuttons()
+	{
+	  for (Mutton a2a: muttonsToAdd)
+	  {
+	     theMuttons.add(a2a); 
+	  }
+	  muttonsToAdd.clear();
+	  
+	  for (Mutton a2r: muttonsToRemove)
+	  {
+	     theMuttons.remove(a2r); 
+	  }
+	  muttonsToRemove.clear();
+	}
+
+	// ****************************************DRAW ALL ARROWS
+	void drawAllMuttons()
+	{
+	  for (Mutton a:theMuttons)
+	  {
+	    drawSheep(a.getXPos(),a.getYPos());
+	  }
 	}
 }
