@@ -1,48 +1,50 @@
 package net.bucktower.pressthemutton;
 
 public class Mutton {
-	int myXPos;
-	int myYPos;
+	double myXPos;
+	double myYPos;
 	double myXVel;
 	double myYVel;
 	int width = PressTheMutton.myWidth;
 	int height = PressTheMutton.myHeight;
 	int cataWidth = PressTheMutton.cataWidth;
 	int cataHeight = PressTheMutton.cataHeight;
+	int muttonWidth = PressTheMutton.sheepWidth;
+	
 	public boolean isAlive = true;
 	
 	  Mutton(int mouseX, int mouseY)
 	  {
 	    myXPos = mouseX;
 	    myYPos = mouseY;
-	    myXVel = (PressTheMutton.cataMargin+PressTheMutton.cataWidth)\-mouseX);
-	    myYVel = (PressTheMutton.cataHeight-(height-mouseY));
+	    myXVel = (PressTheMutton.cataMargin+PressTheMutton.cataWidth)-mouseX;
+	    myYVel = ((height-mouseY)-PressTheMutton.cataHeight);
 	  }
 	  
 	  void setPos(float inX, float inY)
 	  {
-	    myXPos = (int) inX;
-	    myYPos = (int) inY;
+	    myXPos = inX;
+	    myYPos = inY;
 	  }
 	  
 	  void update(double deltaT)
 	  {
 	    // MOVE!
-	    myXPos += (int)(myXVel * deltaT);
-	    myYPos += (int) (myYVel * deltaT);
+	    myXPos += (myXVel * deltaT);
+	    myYPos += (myYVel * deltaT);
 	    
 	    //LEFT
-	    if (myXPos <= cataWidth)
+	    if (myXPos <= 0)
 	    {
 	       myXVel *= -1;
 	    }
 	    //RIGHT
-	    if (myXPos >= width-cataWidth)
+	    if (myXPos >= width)
 	    {
 	       myXVel *= -1;
 	    }
 	    //TOP
-	    if (myYPos <= cataHeight)
+	    if (myYPos <= 0)
 	    {
 	       myYVel *= -1;
 	    }
@@ -55,18 +57,18 @@ public class Mutton {
 	    }
 	    
 	    //Gravity
-	    myYVel = myYVel + (33*deltaT);
+	    myYVel = myYVel + (99*deltaT);
 	    
-	    System.out.println("xvel: "+myXVel);
-	    System.out.println("yvel: "+myYVel);
+	    //System.out.println("xvel: "+myXVel);
+	    //System.out.println("yvel: "+myYVel);
 	    
 	  }
 	  
-	  public int getXPos(){
+	  public double getXPos(){
 		  return myXPos;
 	  }
 	  
-	  public int getYPos(){
+	  public double getYPos(){
 		  return myYPos;
 	  }
 }

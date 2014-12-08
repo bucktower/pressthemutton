@@ -20,6 +20,7 @@ public class PressTheMutton extends PApplet {
 	static int cataMargin = 150;
 	static int cataHeight;
 	static int cataWidth;
+	boolean shouldDrawString = false;
 		
 	//grass
 	ImageEditor grass;
@@ -33,6 +34,7 @@ public class PressTheMutton extends PApplet {
 	public static int sheepWidth;
 
 	public void setup() {
+		background(45,150,169);
 		SketchObject.setApp(this);	
 		
 		theMuttons = new ArrayList<Mutton>();
@@ -63,35 +65,38 @@ public class PressTheMutton extends PApplet {
 	}
 
 	public void draw() {
+		drawGame(false);
 	    updateAllMuttons();
 	    addOrRemoveMuttons();
 	    drawAllMuttons();
 	}
 	
 	public void mousePressed(){
-		if(mouseX < cataMargin+cata.width() && mouseY > height-cata.height()){
-			drawGame(true);
-		}
+		shouldDrawString = true;
 	}
 	
-	public void mouseDragged(){
-		if(mouseX < cataMargin+cata.width() && mouseY > height-cata.height()){
-			drawGame(true);
-		}
+	public void mouseDragged(){		
+		shouldDrawString = true;
 	}
 	
 	public void mouseReleased(){
-		//the mutton man goes flying
-		Mutton tempMutton = new Mutton(mouseX, mouseY);
-	    muttonsToAdd.add(tempMutton);
+		if(mouseX <= cataMargin+cataWidth && mouseY >= height-cataHeight){
+			//the mutton man goes flying
+			Mutton tempMutton = new Mutton(mouseX, mouseY);
+		    muttonsToAdd.add(tempMutton);
+		    drawGame(true);
+		}
+		shouldDrawString = false;
 	}
 	
 	private void drawGame(boolean drawSheep){
+		noStroke();
 		background(45,150,169);
+		//rect(0,0,width,height-cataHeight);
+		//rect(cataMargin+cataWidth,height-cataHeight,width-cataMargin-cataWidth,height-cataHeight);
 		drawGrass();
 		drawCata();
-		
-		if(drawSheep){
+		if(shouldDrawString){
 			drawString();
 			drawSheep(mouseX, mouseY);
 		}
@@ -112,10 +117,12 @@ public class PressTheMutton extends PApplet {
 	}
 	
 	private void drawString(){
-		stroke(255);
-		line(cataMargin, height-cata.height(), mouseX, mouseY);
-		line(cataMargin+cata.width(), height-cata.height(), mouseX, mouseY);
-		noStroke();
+		if(mouseX < cataMargin+cata.width() && mouseY > height-cata.height()){
+			stroke(255);
+			line(cataMargin, height-cata.height(), mouseX, mouseY);
+			line(cataMargin+cata.width(), height-cata.height(), mouseX, mouseY);
+			noStroke();
+		}
 	}
 	
 	public static void main(String _args[]) {
@@ -157,7 +164,7 @@ public class PressTheMutton extends PApplet {
 	{
 	  for (Mutton a:theMuttons)
 	  {
-	    drawSheep(a.getXPos(),a.getYPos());
+	    drawSheep((int)a.getXPos(),(int)a.getYPos());
 	  }
 	}
 }
