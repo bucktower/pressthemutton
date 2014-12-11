@@ -51,7 +51,8 @@ public class PressTheMutton extends PApplet {
 
 		noStroke();
 		
-		size(myWidth,myHeight);
+		//no dynamic width/height for exporting from Eclipse
+		size(1280,600);
 		
 		//grass
 		grass1X = (int)random(cataMargin+cata.width(),width-grass.width());
